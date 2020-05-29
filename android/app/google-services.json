@@ -1,0 +1,114 @@
+{
+  "project_info": {
+    "project_number": "335651991696",
+    "firebase_url": "https://franzo-56e8e.firebaseio.com",
+    "project_id": "franzo-56e8e",
+    "storage_bucket": "franzo-56e8e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335651991696:android:20b9ac245ade92da98a815",
+        "android_client_info": {
+          "package_name": "com.example.franzoClient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335651991696-9rgik64uri5kp4btd2ttg9q085irqnm4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.franzoClient",
+            "certificate_hash": "30b0f769a1fa65b499a777eee66f6099ba2be3e9"
+          }
+        },
+        {
+          "client_id": "335651991696-kv5rrojvbvji6r6h7t87tfe0m6fh7rc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFu8VK9xqJRcAJCxg4KiJimwJunY8ldNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335651991696-kv5rrojvbvji6r6h7t87tfe0m6fh7rc9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335651991696:android:d0543526945d358698a815",
+        "android_client_info": {
+          "package_name": "com.example.franzo_client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335651991696-39t7vmt9k8vgctea5c90gllvsuq5f8nt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.franzo_client",
+            "certificate_hash": "30b0f769a1fa65b499a777eee66f6099ba2be3e9"
+          }
+        },
+        {
+          "client_id": "335651991696-kv5rrojvbvji6r6h7t87tfe0m6fh7rc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFu8VK9xqJRcAJCxg4KiJimwJunY8ldNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335651991696-kv5rrojvbvji6r6h7t87tfe0m6fh7rc9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335651991696:android:ff5b4b175d93fe8d98a815",
+        "android_client_info": {
+          "package_name": "com.example.franzo_merchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335651991696-kv5rrojvbvji6r6h7t87tfe0m6fh7rc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFu8VK9xqJRcAJCxg4KiJimwJunY8ldNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335651991696-kv5rrojvbvji6r6h7t87tfe0m6fh7rc9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
