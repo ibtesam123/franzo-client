@@ -23,6 +23,9 @@ dependencies:
   carousel_slider: ^2.1.0
   random_string: ^2.0.1
   intl: ^0.16.1
+  launch_review: ^2.0.0
+  share: ^0.6.4+3
+  geolocator: ^5.3.1
 
 dev_dependencies:
   flutter_test:

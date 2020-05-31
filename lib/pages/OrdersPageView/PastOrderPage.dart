@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-// import '../../model/Order.dart';
+import '../../models/Order.dart';
 import '../../scoped_models/MainModel.dart';
 
 class PastOrderPage extends StatefulWidget {
@@ -51,8 +51,7 @@ class _PastOrderPageState extends State<PastOrderPage> {
     );
   }
 
-  // Widget _buildSingleOrder(Order order) {
-  Widget _buildSingleOrder() {
+  Widget _buildSingleOrder(Order order) {
     return GestureDetector(
       onTap: () {
         // Navigator.of(context).pushNamed('/OrderDetailsPage',
@@ -69,36 +68,29 @@ class _PastOrderPageState extends State<PastOrderPage> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // _buildOrderTitle(order.serviceName),
-            _buildOrderTitle("Order Title"),
-            // _buildOrderSubService(order.subService),
-            _buildOrderSubService("Order sub service"),
+            _buildOrderTitle(order.serviceName),
+            _buildOrderSubService(order.subService),
             SizedBox(height: 10.0),
-            // _buildOrderDetail(order.desc),
-            _buildOrderDetail("Order Description"),
+            _buildOrderDetail(order.desc),
             SizedBox(height: 10.0),
-            // _buildOrderStatus(order.status[order.status.length - 1]),
-            _buildOrderStatus("This is the order status"),
+            _buildOrderStatus(order.status[order.status.length - 1]),
           ],
         ),
       ),
     );
   }
 
-
   Widget _buildBody() {
     return ScopedModelDescendant<MainModel>(builder: (_, __, model) {
       return ListView.builder(
         itemBuilder: (context, index) {
-          // Order _order = model.orderList[index];
-          // if (_order.isComplete)
-          // return _buildSingleOrder(_order);
-          return _buildSingleOrder();
-          // else
-          //   return Container();
+          Order _order = model.orderList[index];
+          if (_order.isComplete)
+            return _buildSingleOrder(_order);
+          else
+            return Container();
         },
-        // itemCount: model.orderList.length,
-        itemCount: 3,
+        itemCount: model.orderList.length,
       );
     });
   }

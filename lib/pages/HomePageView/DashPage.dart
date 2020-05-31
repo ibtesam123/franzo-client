@@ -14,7 +14,7 @@ class _DashPageState extends State<DashPage> {
   MainModel _staticModel;
 
   Widget _buildAppBar() {
-    // var _address = _staticModel.currentLocation;
+    var _address = _staticModel.currentLocation;
     return PreferredSize(
       preferredSize: Size(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height * 0.1),
@@ -33,8 +33,8 @@ class _DashPageState extends State<DashPage> {
             SizedBox(width: 15.0),
             Expanded(
               child: Marquee(
-                text: "This is the place for location of the client",
-                // '${_address['thoroughfare']}, ${_address['locality']}, ${_address['administrativeArea']}',
+                text:
+                    '${_address['thoroughfare']}, ${_address['locality']}, ${_address['administrativeArea']}',
                 scrollAxis: Axis.horizontal,
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
                 crossAxisAlignment: CrossAxisAlignment.end,

@@ -13,10 +13,12 @@ class User {
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
+    List<String> _orders = List<String>();
+    for (String s in map['orders']) _orders.add(s);
     return User(
       uid: map['uid'],
       name: map['name'],
-      orders: map['orders'],
+      orders: _orders,
       email: map['email'],
       imageURL: map['imageURL'],
       phone: map['phone'],

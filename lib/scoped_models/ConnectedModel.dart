@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:random_string/random_string.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
@@ -17,7 +19,9 @@ mixin ConnectedModel on Model {
   User _currentUser;
   Firestore _remoteDB;
   StorageReference _remoteStorage;
+  Map<String, dynamic> _currentLocation;
   List<Order> _orderList;
+
   List<Map<String, dynamic>> _services = [
     {
       'serviceName': 'Cleaning Service',
@@ -27,16 +31,19 @@ mixin ConnectedModel on Model {
           'id': 0,
           'name': 'BathRoom',
           'image': 'assets/images/listing/room.jpg',
+          'price': 200,
         },
         {
           'id': 1,
           'name': 'Sofa',
           'image': 'assets/images/listing/room.jpg',
+          'price': 150,
         },
         {
           'id': 2,
           'name': 'Kitchen',
           'image': 'assets/images/listing/room.jpg',
+          'price': 600,
         },
       ],
       'image': 'assets/images/listing/room.jpg',
@@ -49,16 +56,19 @@ mixin ConnectedModel on Model {
           'id': 3,
           'name': 'Plumber',
           'image': 'assets/images/listing/electric.jpg',
+          'price': 150,
         },
         {
           'id': 4,
           'name': 'Electrician',
           'image': 'assets/images/listing/electric.jpg',
+          'price': 180,
         },
         {
           'id': 5,
           'name': 'Carpenter',
           'image': 'assets/images/listing/electric.jpg',
+          'price': 280,
         },
       ],
       'image': 'assets/images/listing/electric.jpg',
@@ -71,16 +81,19 @@ mixin ConnectedModel on Model {
           'id': 6,
           'name': 'Grooming',
           'image': 'assets/images/listing/grooming.jpg',
+          'price': 750,
         },
         {
           'id': 7,
           'name': 'Hair Cut',
           'image': 'assets/images/listing/grooming.jpg',
+          'price': 150,
         },
         {
           'id': 8,
           'name': 'Massage',
           'image': 'assets/images/listing/grooming.jpg',
+          'price': 800,
         },
       ],
       'image': 'assets/images/listing/grooming.jpg',
@@ -93,11 +106,13 @@ mixin ConnectedModel on Model {
           'id': 9,
           'name': 'Laptops',
           'image': 'assets/images/listing/electronic.jpg',
+          'price': 450,
         },
         {
           'id': 10,
           'name': 'Mobiles',
           'image': 'assets/images/listing/electronic.jpg',
+          'price': 200,
         },
       ],
       'image': 'assets/images/listing/electronic.jpg',
@@ -222,35 +237,48 @@ mixin UserModel on ConnectedModel {
 }
 
 mixin OrderModel on ConnectedModel {
-  Future<bool> placeOrder(Order order, File image) async {
+  Future<bool> placeOrder({
+    @required Map<String, dynamic> service,
+    @required Map<String, dynamic> subService,
+    @required int count,
+    @required String desc,
+    @required File image,
+  }) async {
     try {
       _isLoading = 2;
       notifyListeners();
-
-      //Upload image if available to storage
-      if (image != null) {
-        var _snap = await _remoteStorage
-            .child('ORDER_IMAGES')
-            .child(order.orderID)
-            .putFile(image)
-            .onComplete;
-
-        var _imageURL = await _snap.ref.getDownloadURL();
-        order.setImageURL(_imageURL);
-      }
-
-      order.setUid(_currentUser.uid);
-      order.setLocation(0.0, 0.0); //TODO: Set location to order
-      order.setPrice(0.0); //TODO: Set estimated price to order
       List<String> _orderStatus = List<String>();
       _orderStatus.add(
         'Order Placed on ' +
             DateFormat('dd MMMM yyyy hh:mm a').format(DateTime.now()),
       );
-      order.setStatus(_orderStatus);
+      Order _order = Order(
+        count: count,
+        desc: desc,
+        isComplete: false,
+        orderID: randomAlphaNumeric(20),
+        serviceID: service['id'],
+        subServiceID: subService['id'],
+        serviceName: service['serviceName'],
+        subService: subService['name'],
+        lat: _currentLocation['position']['latitude'],
+        long: _currentLocation['position']['longitude'],
+        price: subService['price'],
+        status: _orderStatus,
+        uid: _currentUser.uid,
+      );
 
-      _orderList.add(order);
-      _currentUser.orders.add(order.orderID);
+      //Upload image if available to storage
+      if (image != null) {
+        var _snap = await _remoteStorage
+            .child('ORDER_IMAGES')
+            .child(_order.orderID)
+            .putFile(image)
+            .onComplete;
+
+        var _imageURL = await _snap.ref.getDownloadURL();
+        _order.setImageURL(_imageURL);
+      }
 
       //TODO: save orderlist of users to localDB
       //TODO: Add order to localDB
@@ -258,8 +286,8 @@ mixin OrderModel on ConnectedModel {
       //Upload order to database
       _remoteDB
           .collection('ORDERS')
-          .document(order.orderID)
-          .setData(order.getMap());
+          .document(_order.orderID)
+          .setData(_order.getMap());
 
       _remoteDB
           .collection('USERS')
@@ -286,6 +314,13 @@ mixin UtilityModel on ConnectedModel {
     _remoteDB = Firestore.instance;
     _remoteStorage = FirebaseStorage.instance.ref();
     _orderList = List<Order>(); //TODO: Get order list from localDB
+
+    //Get user's current location
+    Position _position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    var _placemarks = await Geolocator().placemarkFromPosition(_position);
+    _currentLocation = _placemarks[0].toJson();
+
     if (_fUser == null)
       return false;
     else {
@@ -309,4 +344,5 @@ mixin UtilityModel on ConnectedModel {
   User get currentUser => _currentUser;
   List<Map<String, dynamic>> get services => _services;
   List<Order> get orderList => _orderList;
+  Map<String, dynamic> get currentLocation => _currentLocation;
 }

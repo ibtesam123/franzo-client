@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:random_string/random_string.dart';
 import 'dart:io';
 
 import '../scoped_models/MainModel.dart';
 import '../utils/CustomDialogs.dart';
-import '../models/Order.dart';
 
 class ServiceDetailsPage extends StatefulWidget {
   final int serviceIndex, subServiceIndex;
@@ -177,18 +175,13 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
             if (!_formKey.currentState.validate()) return;
             _formKey.currentState.save();
 
-            Order order = Order(
+            var res = await model.placeOrder(
               count: _count,
               desc: _desc,
-              isComplete: false,
-              orderID: randomAlphaNumeric(20),
-              serviceID: _service['id'],
-              serviceName: _service['serviceName'],
-              subService: _subService['name'],
-              subServiceID: _subService['id'],
+              image: _image,
+              service: _service,
+              subService: _subService,
             );
-
-            var res = await model.placeOrder(order, _image);
 
             if (res) {
               Navigator.of(context).pushNamedAndRemoveUntil(

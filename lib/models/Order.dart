@@ -47,6 +47,8 @@ class Order {
   }
 
   factory Order.fromMap({@required Map<String, dynamic> map}) {
+    List<String> _status = List<String>();
+    for (String s in map['status']) _status.add(s);
     return Order(
       count: map['count'],
       desc: map['desc'],
@@ -57,7 +59,7 @@ class Order {
       price: map['price'],
       lat: map['lat'],
       subService: map['subService'],
-      status: map['status'],
+      status: _status,
       long: map['long'],
       imageURL: map['imageURL'],
       isComplete: map['isComplete'],
