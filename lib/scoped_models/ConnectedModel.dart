@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+import 'dart:async';
 
 import '../models/User.dart';
 import '../models/Order.dart';
@@ -263,7 +264,7 @@ mixin OrderModel on ConnectedModel {
         subService: subService['name'],
         lat: _currentLocation['position']['latitude'],
         long: _currentLocation['position']['longitude'],
-        price: subService['price'],
+        price: double.parse(subService['price'].toString()),
         status: _orderStatus,
         uid: _currentUser.uid,
       );
@@ -279,6 +280,8 @@ mixin OrderModel on ConnectedModel {
         var _imageURL = await _snap.ref.getDownloadURL();
         _order.setImageURL(_imageURL);
       }
+
+      _currentUser.orders.add(_order.orderID);
 
       //TODO: save orderlist of users to localDB
       //TODO: Add order to localDB
@@ -303,6 +306,11 @@ mixin OrderModel on ConnectedModel {
       notifyListeners();
       return false;
     }
+  }
+
+  void updateOrder(Order order, int index) {
+    _orderList[index] = order;
+    //TODO: Update in localDB
   }
 }
 

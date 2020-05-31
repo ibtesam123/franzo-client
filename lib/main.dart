@@ -9,6 +9,7 @@ import './pages/auth/SignupPage.dart';
 import './pages/SubServicePage.dart';
 import './pages/ServiceDetailsPage.dart';
 import './pages/OrderPlacedPage.dart';
+import './pages/OrderDetailsPage.dart';
 import './utils/ArgumentClasses.dart';
 
 void main() {
@@ -50,6 +51,11 @@ class MyMaterial extends StatelessWidget {
                   serviceIndex: _arguments.serviceIndex,
                   subServiceIndex: _arguments.subServiceIndex,
                 ),
+              );
+            case '/OrderDetailsPage':
+              OrderDetailsClass _arguments = settings.arguments;
+              return MaterialPageRoute(
+                builder: (_) => OrderDetailsPage(orderID: _arguments.orderID),
               );
             default:
               return null;

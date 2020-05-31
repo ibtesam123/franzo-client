@@ -55,8 +55,8 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
   Widget _buildSingleOrder(Order order) {
     return GestureDetector(
       onTap: () {
-        // Navigator.of(context).pushNamed('/OrderDetailsPage',
-        //     arguments: OrderDetailsClass(order));
+        Navigator.of(context).pushNamed('/OrderDetailsPage',
+            arguments: OrderDetailsClass(order.orderID));
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 10, 15, 5),
