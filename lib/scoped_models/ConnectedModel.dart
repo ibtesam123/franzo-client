@@ -12,6 +12,7 @@ import 'dart:async';
 import '../models/User.dart';
 import '../models/Order.dart';
 import '../pages/auth/OTPPage.dart';
+import '../models/BidPrice.dart';
 
 mixin ConnectedModel on Model {
   int _isLoading;
@@ -216,7 +217,6 @@ mixin UserModel on ConnectedModel {
         email: email,
         phone: _phone,
         imageURL: "null",
-        orders: List<String>(),
       );
 
       _remoteDB
@@ -244,6 +244,7 @@ mixin OrderModel on ConnectedModel {
     @required int count,
     @required String desc,
     @required File image,
+    @required bool bidEnabled,
   }) async {
     try {
       _isLoading = 2;
@@ -253,6 +254,14 @@ mixin OrderModel on ConnectedModel {
         'Order Placed on ' +
             DateFormat('dd MMMM yyyy hh:mm a').format(DateTime.now()),
       );
+
+      List<BidPrice> _price = List<BidPrice>();
+      _price.add(BidPrice(
+        companyID: null,
+        companyName: null,
+        price: double.parse(subService['price'].toString()),
+      ));
+
       Order _order = Order(
         count: count,
         desc: desc,
@@ -264,7 +273,8 @@ mixin OrderModel on ConnectedModel {
         subService: subService['name'],
         lat: _currentLocation['position']['latitude'],
         long: _currentLocation['position']['longitude'],
-        price: double.parse(subService['price'].toString()),
+        price: _price,
+        bidEnabled: bidEnabled,
         status: _orderStatus,
         uid: _currentUser.uid,
       );
@@ -281,21 +291,13 @@ mixin OrderModel on ConnectedModel {
         _order.setImageURL(_imageURL);
       }
 
-      _currentUser.orders.add(_order.orderID);
-
-      //TODO: save orderlist of users to localDB
-      //TODO: Add order to localDB
+      _orderList.add(_order);
 
       //Upload order to database
       _remoteDB
           .collection('ORDERS')
           .document(_order.orderID)
           .setData(_order.getMap());
-
-      _remoteDB
-          .collection('USERS')
-          .document(_currentUser.uid)
-          .setData(_currentUser.toMap(), merge: true);
 
       _isLoading = -1;
       notifyListeners();
@@ -308,9 +310,24 @@ mixin OrderModel on ConnectedModel {
     }
   }
 
-  void updateOrder(Order order, int index) {
-    _orderList[index] = order;
-    //TODO: Update in localDB
+  Stream<DocumentSnapshot> getBiddingStream(String orderID) {
+    return _remoteDB.collection('ORDERS').document(orderID).get().asStream();
+  }
+
+  void acceptBid(Order order, String companyID) {
+    order.setCompanyID(companyID);
+    order.status.add(
+      'Order assigned to company: ' +
+          order.price
+              .firstWhere((element) => element.companyID == companyID)
+              .companyName,
+    );
+    order.setBidEnabled(false);
+
+    _remoteDB
+        .collection('ORDERS')
+        .document(order.orderID)
+        .setData(order.getMap(), merge: true);
   }
 }
 
@@ -321,7 +338,7 @@ mixin UtilityModel on ConnectedModel {
     _fUser = await _fAuth.currentUser();
     _remoteDB = Firestore.instance;
     _remoteStorage = FirebaseStorage.instance.ref();
-    _orderList = List<Order>(); //TODO: Get order list from localDB
+    _orderList = List<Order>();
 
     //Get user's current location
     Position _position = await Geolocator()
@@ -332,16 +349,14 @@ mixin UtilityModel on ConnectedModel {
     if (_fUser == null)
       return false;
     else {
-      // TODO: Fetch user from localDB instead
       var doc = await _remoteDB.collection('USERS').document(_fUser.uid).get();
       _currentUser = User.fromMap(doc.data);
 
       var _snap = await _remoteDB.collection('ORDERS').getDocuments();
       var _docs = _snap.documents;
       for (DocumentSnapshot doc in _docs) {
-        if (_currentUser.orders.contains(doc.documentID)) {
+        if (doc.data['uid'] == _currentUser.uid)
           _orderList.add(Order.fromMap(map: doc.data));
-        }
       }
 
       return true;

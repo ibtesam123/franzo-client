@@ -181,6 +181,7 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
               image: _image,
               service: _service,
               subService: _subService,
+              bidEnabled: true,
             );
 
             if (res) {
