@@ -19,7 +19,7 @@ class _DashPageState extends State<DashPage> {
       preferredSize: Size(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height * 0.1),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.13,
+        height: MediaQuery.of(context).size.height * 0.09,
         color: Colors.black,
         padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
         child: Row(

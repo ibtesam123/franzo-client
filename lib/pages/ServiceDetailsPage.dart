@@ -175,31 +175,72 @@ class _ServiceDetailsPageState extends State<ServiceDetailsPage> {
             if (!_formKey.currentState.validate()) return;
             _formKey.currentState.save();
 
-            var res = await model.placeOrder(
-              count: _count,
-              desc: _desc,
-              image: _image,
-              service: _service,
-              subService: _subService,
-              bidEnabled: true,
-            );
+            await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Text(
+                      'If you want to use bidding system, press bidding or you can always go with the normal order.',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                          child: Text('Bidding'),
+                          onPressed: () async {
+                            var res = await model.placeOrder(
+                              count: _count,
+                              desc: _desc,
+                              image: _image,
+                              service: _service,
+                              subService: _subService,
+                              bidEnabled: true,
+                            );
 
-            if (res) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/OrderPlacedPage',
-                (route) => false,
-              );
-            } else {
-              CustomDialogs.alertDialog1(
-                  context: context,
-                  message: 'An Error Occured',
-                  dismissible: false);
-            }
+                            if (res) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/OrderPlacedPage',
+                                (route) => false,
+                              );
+                            } else {
+                              CustomDialogs.alertDialog1(
+                                  context: context,
+                                  message: 'An Error Occured',
+                                  dismissible: false);
+                            }
+                          }),
+                      FlatButton(
+                          child: Text('Normal'),
+                          onPressed: () async {
+                            var res = await model.placeOrder(
+                              count: _count,
+                              desc: _desc,
+                              image: _image,
+                              service: _service,
+                              subService: _subService,
+                              bidEnabled: false,
+                            );
+
+                            if (res) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/OrderPlacedPage',
+                                (route) => false,
+                              );
+                            } else {
+                              CustomDialogs.alertDialog1(
+                                  context: context,
+                                  message: 'An Error Occured',
+                                  dismissible: false);
+                            }
+                          })
+                    ],
+                  );
+                });
           },
           child: Material(
             elevation: 6,
             child: Container(
-              height: _height * 0.1,
+              height: _height * 0.07,
               color: Colors.white,
               child: Container(
                 margin: EdgeInsets.all(8),

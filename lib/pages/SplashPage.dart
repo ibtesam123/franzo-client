@@ -22,7 +22,19 @@ class _SplashPageState extends State<SplashPage> {
 
   Widget _buildBody() {
     return Center(
-      child: Image.asset('assets/images/FRANZO.jpg'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset('assets/images/FRANZO.png'),
+          SizedBox(
+            height: 10,
+          ),
+          CircularProgressIndicator(
+            backgroundColor: Color(0XFF000000),
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ],
+      ),
     );
   }
 

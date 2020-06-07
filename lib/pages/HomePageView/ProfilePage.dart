@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -129,6 +130,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   LaunchReview.launch(androidAppId: "farhaz.alam.fweather2");
                 },
                 child: _buildServiceItems('Rate Franzo', Icons.star)),
+            _buildDivider(),
+            GestureDetector(
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.of(context).pushReplacementNamed('/');
+                },
+                child:
+                    _buildServiceItems('Sign Out', Icons.power_settings_new)),
             _buildDivider(),
           ],
         ),

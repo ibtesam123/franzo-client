@@ -30,6 +30,10 @@ class MyMaterial extends StatelessWidget {
       model: model,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Colors.black,
+          accentColor: Colors.grey
+        ),
         routes: {
           '/': (context) => SplashPage(),
           '/LoginPage': (context) => LoginPage(),

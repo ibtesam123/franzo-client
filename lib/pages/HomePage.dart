@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             topLeft: const Radius.circular(10.0),
             topRight: const Radius.circular(10.0)),
         child: Container(
-          height: _height * 0.08,
+          height: _height * 0.06,
           padding: EdgeInsets.symmetric(vertical: 5.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

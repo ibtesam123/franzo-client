@@ -52,6 +52,16 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
     );
   }
 
+  Widget _buildOngoingText() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: Text(
+        'ONGOING',
+        style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
   Widget _buildSingleOrder(Order order) {
     return GestureDetector(
       onTap: () {
@@ -62,14 +72,20 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
         margin: EdgeInsets.fromLTRB(15, 10, 15, 5),
         padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          border: Border.all(color: Colors.black54, width: 1.0),
-        ),
+            borderRadius: BorderRadius.circular(5.0),
+            border: Border.all(color: Colors.black54, width: 1.0),
+            color: Colors.white),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildOrderTitle(order.serviceName),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                _buildOrderTitle(order.serviceName),
+                _buildOngoingText(),
+              ],
+            ),
             _buildOrderSubService(order.subService),
             SizedBox(height: 10.0),
             _buildOrderDetail(order.desc),
@@ -82,18 +98,21 @@ class _OngoingOrderPageState extends State<OngoingOrderPage> {
   }
 
   Widget _buildBody() {
-    return ScopedModelDescendant<MainModel>(builder: (_, __, model) {
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          Order _order = model.orderList[index];
-          if (!_order.isComplete)
-            return _buildSingleOrder(_order);
-          else
-            return Container();
-        },
-        itemCount: model.orderList.length,
-      );
-    });
+    return Container(
+      color: Colors.grey[200],
+      child: ScopedModelDescendant<MainModel>(builder: (_, __, model) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            Order _order = model.orderList[index];
+            if (!_order.isComplete)
+              return _buildSingleOrder(_order);
+            else
+              return Container();
+          },
+          itemCount: model.orderList.length,
+        );
+      }),
+    );
   }
 
   @override

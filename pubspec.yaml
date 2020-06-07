@@ -36,7 +36,8 @@ flutter:
   uses-material-design: true
 
   assets:
-   - assets/images/FRANZO.jpg
+   - assets/images/FRANZO.png
+   - assets/images/Logo.png
    - assets/images/auth.png
    - assets/images/carousel/furniture.jpg
    - assets/images/carousel/pest.jpg

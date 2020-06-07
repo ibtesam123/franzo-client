@@ -362,7 +362,7 @@ mixin UtilityModel on ConnectedModel {
       return true;
     }
   }
-
+  
   int get isLoading => _isLoading;
   User get currentUser => _currentUser;
   List<Map<String, dynamic>> get services => _services;
